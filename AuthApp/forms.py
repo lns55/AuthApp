@@ -1,11 +1,9 @@
 from django import forms
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.contrib.auth.models import User
 
 
 class LoginForm(forms.ModelForm):
-    password = forms.Charfield(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -29,14 +27,10 @@ class LoginForm(forms.ModelForm):
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-
     confirm_password = forms.CharField(widget=forms.PasswordInput)
-
     phone = forms.CharField(required=False)
-
     address = forms.CharField(required=False)
-
-    email = forms.EmailField()
+    email = forms.EmailField(required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,16 +42,11 @@ class RegistrationForm(forms.ModelForm):
         self.fields['first_name'].label = 'Eesnimi'
         self.fields['last_name'].label = 'Perekonnanimi'
 
-    def _clean_email(self):
-        self.fields['email'].label = 'Email'
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('Selline email aadres on juba kasutuses')
-        return email
-
     def clean_username(self):
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError(f'{username} on juba kasutuses')
+        return username
 
     def clean(self):
         password = self.cleaned_data['password']

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+</head>
+<body>
+  <div class="row" style="margin-botom:300px; margin-top:180px">
+    <h3 class="text-center">Logi Sisse</h3>
+    <hr>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" class="btn btn-success" value="Logi sisse">
+    </form>
+  </div>
+</body>
+</html>

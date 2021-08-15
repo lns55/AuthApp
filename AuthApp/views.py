@@ -1,12 +1,15 @@
 from django import views
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, View
 
 from .forms import LoginForm, RegistrationForm
 
 
-class LoginView(views.View):
+class LoginView(CreateView):
 
     def get(self, request, *args, **kwargs):
         form = LoginForm(request.POST or None)
@@ -30,9 +33,9 @@ class LoginView(views.View):
         return render(request, 'login.html', context)
 
 
-class RegistrationView(views.View):
+class RegistrationView(View):
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         form = RegistrationForm(request.POST or None)
         context = {
             'form': form
@@ -42,7 +45,7 @@ class RegistrationView(views.View):
     def post(self, request, *args, **kwargs):
         form = RegistrationForm(request.POST or None)
         if form.is_valid():
-            new_user = form.save(commit=False)
+            new_user = form.save()
             new_user.username = form.cleaned_data['username']
             new_user.email = form.cleaned_data['email']
             new_user.first_name = form.cleaned_data['first_name']
@@ -59,3 +62,7 @@ class RegistrationView(views.View):
             'form': form
         }
         return render(request, 'registration.html', context)
+
+
+def index(request):
+    return render(request, 'index.html')
